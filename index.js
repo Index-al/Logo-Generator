@@ -17,8 +17,8 @@ function getUserInput() {
         },
         {
             type: 'input',
-            name: 'color',
-            message: 'Type your desired color:'
+            name: 'bgColor',
+            message: 'Type your desired shape color:'
         },
         {
             type: 'input',
@@ -30,6 +30,11 @@ function getUserInput() {
                 }
                 return true;
             }
+        },
+        {
+            type: 'input',
+            name: 'textColor',
+            message: 'Type your desired text color:'
         }
     ])
 }
@@ -40,7 +45,7 @@ function generateSVG(input) {
     const shapeFunction = shapes[`create${input.shape}`];
 
     // Call the shape function to get the SVG string
-    const svgString = shapeFunction(input.color, input.text);
+    const svgString = shapeFunction(input.bgColor, input.text, input.textColor);
 
     // Return the SVG string
     return svgString;
