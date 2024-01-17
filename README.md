@@ -9,7 +9,6 @@ Clone the repository to your local machine:
 
 ```bash
 git clone git@github.com:Index-al/Logo-Generator.git
-cd svg-logo-maker
 ```
 
 Install the necessary dependencies:
