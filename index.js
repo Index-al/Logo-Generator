@@ -6,7 +6,7 @@ const shapes = require('./lib/shapes.js');
 // Function to prompt user input
 function getUserInput() {
     // Define the color options
-    const colorOptions = ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Black', 'Gray'];
+    const colorOptions = ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Black', 'Gray', 'Other'];
 
     // Use inquirer to prompt the user for input
     return inquirer.prompt([
@@ -20,15 +20,29 @@ function getUserInput() {
             type: 'list',
             name: 'color',
             message: 'Select your desired color:',
-            choices: colorOptions
+            choices: colorOptions,
+            when: (answers) => answers.color !== 'Other'
+        },
+        {
+            type: 'input',
+            name: 'color',
+            message: 'Enter your desired color (hexadecimal code):',
+            when: (answers) => answers.color === 'Other',
+            validate: function (input) {
+                const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+                if (!hexColorRegex.test(input)) {
+                    return 'Please enter a valid hexadecimal color code.';
+                }
+                return true;
+            }
         },
         {
             type: 'input',
             name: 'text',
             message: 'Enter your logo text:',
             validate: function (input) {
-                if (input.length > 4) {
-                    return 'Logo text should not exceed 4 characters.';
+                if (input.length > 3) {
+                    return 'Logo text should not exceed 3 characters.';
                 }
                 return true;
             }
@@ -60,7 +74,7 @@ function saveSVG(svgContent, fileName) {
 async function main() {
     const userInput = await getUserInput();
     const svgContent = generateSVG(userInput);
-    saveSVG(svgContent, './examples/output.svg');
+    saveSVG(svgContent, './examples/logo.svg');
     console.log('SVG Logo created successfully! Check the examples folder for the output file.');
 }
 
