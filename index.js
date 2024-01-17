@@ -1,12 +1,11 @@
 // Require necessary libraries
 const inquirer = require('inquirer');
 const fs = require('fs');
+const open = require('open');
 const shapes = require('./lib/shapes.js');
 
 // Function to prompt user input
 function getUserInput() {
-    // Define the color options
-    const colorOptions = ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Black', 'Gray', 'Other'];
 
     // Use inquirer to prompt the user for input
     return inquirer.prompt([
@@ -17,24 +16,9 @@ function getUserInput() {
             choices: ['Circle', 'Square', 'Triangle']
         },
         {
-            type: 'list',
-            name: 'color',
-            message: 'Select your desired color:',
-            choices: colorOptions,
-            when: (answers) => answers.color !== 'Other'
-        },
-        {
             type: 'input',
             name: 'color',
-            message: 'Enter your desired color (hexadecimal code):',
-            when: (answers) => answers.color === 'Other',
-            validate: function (input) {
-                const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
-                if (!hexColorRegex.test(input)) {
-                    return 'Please enter a valid hexadecimal color code.';
-                }
-                return true;
-            }
+            message: 'Type your desired color:'
         },
         {
             type: 'input',
@@ -74,8 +58,25 @@ function saveSVG(svgContent, fileName) {
 async function main() {
     const userInput = await getUserInput();
     const svgContent = generateSVG(userInput);
+    doWeRoll(userInput.text);
     saveSVG(svgContent, './examples/logo.svg');
     console.log('SVG Logo created successfully! Check the examples folder for the output file.');
+}
+
+function doWeRoll(inputText) {
+    const characters = inputText.toLowerCase();
+    const counts = { r: 0, i: 0, c: 0, k: 0 };
+
+    for (let char of characters) {
+        if (counts.hasOwnProperty(char)) {
+            counts[char]++;
+        }
+    }
+
+    const total = Object.values(counts).reduce((acc, count) => acc + count, 0);
+    if (total >= 3) {
+        open('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+    }
 }
 
 // Run the application
