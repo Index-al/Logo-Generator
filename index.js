@@ -5,30 +5,47 @@ const shapes = require('./lib/shapes.js');
 
 // Function to prompt user input
 function getUserInput() {
+    // Define the color options
+    const colorOptions = ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Black', 'Gray'];
+
     // Use inquirer to prompt the user for input
     return inquirer.prompt([
         {
-            type: 'input',
-            name: 'color',
-            message: 'Enter your desired color:'
+            type: 'list',
+            name: 'shape',
+            message: 'Select your desired shape:',
+            choices: ['Circle', 'Square', 'Triangle']
         },
         {
-            type: 'input',
-            name: 'shape',
-            message: 'Enter your desired shape:'
+            type: 'list',
+            name: 'color',
+            message: 'Select your desired color:',
+            choices: colorOptions
         },
         {
             type: 'input',
             name: 'text',
-            message: 'Enter your logo text:'
+            message: 'Enter your logo text:',
+            validate: function (input) {
+                if (input.length > 4) {
+                    return 'Logo text should not exceed 4 characters.';
+                }
+                return true;
+            }
         }
     ])
 }
 
 // Function to generate SVG content
 function generateSVG(input) {
-    // Use the user input(color, shape, text) and the SVG.js library to create an SVG string, then return it as svcString
-    
+    // Get the shape function from the shapes object
+    const shapeFunction = shapes[`create${input.shape}`];
+
+    // Call the shape function to get the SVG string
+    const svgString = shapeFunction(input.color, input.text);
+
+    // Return the SVG string
+    return svgString;
 }
 
 // Function to save SVG to a file
